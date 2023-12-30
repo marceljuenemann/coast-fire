@@ -1,8 +1,9 @@
+import { HISTORIC_PRICES, FIRST_YEAR } from './historic-us-returns';
 
 /**
  * Configuration for a Coast FIRE simulation.
  */
-interface Config {
+export interface Config {
   /** The current amount invested in any currency. */
   initialInvestment: number
 
@@ -37,6 +38,44 @@ interface Config {
   decemberStartOnly: boolean
 }
 
+export class HistoricReturns {
+  private historicReturns: number[] = []
+
+  constructor() { 
+    for (let i = 12; i < HISTORIC_PRICES.length; i++) {
+      this.historicReturns.push(HISTORIC_PRICES[i] / HISTORIC_PRICES[i - 12])
+    }
+  }
+
+  /**
+   * Returns the year-over-year returns for the period starting with the given year and month.
+   * For example, yoyReturns(2001, 4) returns the stock market returns (as fraction) between
+   * May 2001 and May 2002.
+   * 
+   * @param year the start year of the period in question 
+   * @param month the start month, zero-based
+   */
+  public yoyReturns(year: number, month: number): number {
+    const index = month + (year - FIRST_YEAR) * 12
+    if (index < 0) throw new Error(`Year must be at least ${FIRST_YEAR}`)
+    if (index > this.historicReturns.length) throw new Error(`No historic data starting in year ${year}`)
+    return this.historicReturns[index]
+  }
+}
+
+// TODO: jsdoc
+export class Simulator {
+
+  public constructor(private config: Config) {}
+
+
+}
+
+
+export class BulkSimulation {
+
+}
+
 
 /**
  * 
@@ -62,5 +101,5 @@ interface Config {
 1. Eventually wanna have a nice graph with probabilites for each year span
 1. Nice to have: Graph showing actual amounts simulated, like in that one FIRE simulator
   - Might be a very confusing visualization though...
-  
+
  */

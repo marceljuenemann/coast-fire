@@ -16,6 +16,6 @@ describe('SimulationService', () => {
 
   it('should foo', () => {
     //expect(service).toBeTruthy();
-    console.log(service.foo())
+    //console.log(service.foo())
   });
 });
