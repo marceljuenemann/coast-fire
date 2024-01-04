@@ -38,6 +38,40 @@ export interface Config {
   decemberStartOnly: boolean
 }
 
+/**
+ * Result of a single simulation with a specific start year and month.
+ */
+export interface SingleResult {
+  /**
+   * The historic year where this simulation was started.  
+   */
+  startYear: number
+
+  /**
+   * The historic zero-based month where this simulation was started. 
+   */
+  startMonth: number
+
+  /**
+   * Whether the target FIRE number was reached during the simulation. The
+   * simulation is stopped as soon as the number is reached without checking
+   * whether the portfolio would dip below the target again in later years.
+   */
+  targetReached: boolean
+
+  /**
+   * The number of years that were simulated. The simulation might end because the
+   * target was reached, because we ran out of historic data, or because maxYears
+   * was reached.
+   */
+  yearsSimulated: number
+
+  /**
+   * The amount invested in the portfolio in the last year of the simulation.
+   */
+  finalInvestment: number
+}
+
 export class HistoricReturns {
   private historicReturns: number[] = []
 
@@ -55,20 +89,43 @@ export class HistoricReturns {
    * @param year the start year of the period in question 
    * @param month the start month, zero-based
    */
-  public yoyReturns(year: number, month: number): number {
+  public yoyReturns(year: number, month: number): number | null {
     const index = month + (year - FIRST_YEAR) * 12
-    if (index < 0) throw new Error(`Year must be at least ${FIRST_YEAR}`)
-    if (index > this.historicReturns.length) throw new Error(`No historic data starting in year ${year}`)
+    if (index < 0 || index > this.historicReturns.length) return null
     return this.historicReturns[index]
   }
 }
 
 // TODO: jsdoc
 export class Simulator {
+  private returns = new HistoricReturns()
 
   public constructor(private config: Config) {}
 
+  // TODO: doc
+  public singleSimulation(startYear: number, startMonth: number): SingleResult {
+    let currentInvestment = this.config.initialInvestment
+    let yearsSimulated = 0
 
+    while (currentInvestment < this.config.targetInvestment && yearsSimulated < this.config.maxYears) {
+      // Do we have another year of historic data?
+      const nextReturn = this.returns.yoyReturns(startYear + yearsSimulated, startMonth)
+      if (nextReturn === null) break
+
+      // Simulate the next year
+      // TODO: implement annual investment
+      currentInvestment *= nextReturn
+      yearsSimulated++
+    } 
+
+    return {
+      startYear,
+      startMonth,
+      targetReached: currentInvestment >= this.config.targetInvestment,
+      yearsSimulated,
+      finalInvestment: currentInvestment
+    }
+  }
 }
 
 

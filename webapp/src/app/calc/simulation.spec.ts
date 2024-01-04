@@ -1,4 +1,4 @@
-import { HistoricReturns } from './simulation';
+import { HistoricReturns, Simulator } from './simulation';
 
 describe('HistoricReturns.yoyReturns', () => {
   it('should return historic stock market returns', () => {
@@ -15,4 +15,27 @@ describe('HistoricReturns.yoyReturns', () => {
     // historicReturns.yoyReturns(1870, 0)
   })
   // TODO: check for too recent
+})
+
+describe('Simulator', () => {
+  describe('singleSimulation', () => {
+    xit('should something', () => {
+      const simulator = new Simulator({
+        initialInvestment: 300,
+        targetInvestment: 1000,
+        annualInvestment: 0,
+        minYear: 2008,
+        maxYears: 50,
+        decemberStartOnly: true,
+      })
+
+      expect(simulator.singleSimulation(1990, 1)).toEqual({
+        startYear: 2008,
+        startMonth: 1,
+        targetReached: false,
+        finalInvestment: 400,
+        yearsSimulated: 1,        
+      })
+    })
+  })
 })
