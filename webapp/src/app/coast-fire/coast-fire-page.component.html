@@ -1,0 +1,68 @@
+<div class="page">
+  <header class="hero">
+    <h1>Coast FIRE</h1>
+    <p class="lede">
+      See how often a portfolio would have reached your FIRE number within different time horizons, using
+      historic US market returns.
+    </p>
+  </header>
+
+  <mat-card class="panel">
+    <mat-card-title>Your numbers</mat-card-title>
+    <mat-card-content>
+      <p class="disclaimer">
+        <strong>Note:</strong> The engine does not yet apply annual investment or withdrawals; this field is
+        included so the UI matches the full model once that logic ships.
+      </p>
+
+      <form [formGroup]="form" (ngSubmit)="calculate()" novalidate>
+        <div class="fields">
+          <mat-form-field appearance="outline">
+            <mat-label>FIRE number (target)</mat-label>
+            <input matInput type="number" formControlName="targetInvestment" min="1" step="1000" />
+            <mat-error *ngIf="form.controls.targetInvestment.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.controls.targetInvestment.hasError('min')">Must be at least 1</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Current investments</mat-label>
+            <input matInput type="number" formControlName="initialInvestment" min="0" step="1000" />
+            <mat-error *ngIf="form.controls.initialInvestment.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.controls.initialInvestment.hasError('min')">Cannot be negative</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Annual investment (can be negative)</mat-label>
+            <input matInput type="number" formControlName="annualInvestment" step="1000" />
+            <mat-hint>Use 0 for classic coast FIRE; negative = yearly withdrawal.</mat-hint>
+            <mat-error *ngIf="form.controls.annualInvestment.hasError('required')">Required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="actions">
+          <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || calculating">
+            {{ calculating ? 'Calculating…' : 'Calculate' }}
+          </button>
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="toggleAllYears()"
+            [disabled]="!horizons.length"
+          >
+            {{ showAllYears ? 'Fewer horizons' : 'All years (1 year steps)' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="panel results" *ngIf="horizons.length">
+    <mat-card-content>
+      <app-horizon-summary-table
+        [horizons]="horizons"
+        [showAllYears]="showAllYears"
+        (rowSelected)="openDetail($event)"
+      ></app-horizon-summary-table>
+    </mat-card-content>
+  </mat-card>
+</div>
