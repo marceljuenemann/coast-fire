@@ -56,6 +56,7 @@ describe('Simulator', () => {
         targetReached: false,
         finalInvestment: 400,
         yearsSimulated: 1,
+        investmentByYear: [400],
       })
     })
   })
@@ -77,6 +78,7 @@ describe('Simulator', () => {
       expect(r.targetReached).toBe(true)
       expect(r.yearsSimulated).toBe(4)
       expect(r.finalInvestment).toBe(1600)
+      expect(r.investmentByYear).toEqual([200, 400, 800, 1600])
     })
 
     it('applies annual investment after each year’s YoY (market then contribute)', () => {
@@ -86,6 +88,7 @@ describe('Simulator', () => {
       expect(r.targetReached).toBe(true)
       expect(r.yearsSimulated).toBe(3)
       expect(r.finalInvestment).toBe(1500)
+      expect(r.investmentByYear).toEqual([300, 700, 1500])
     })
 
     it('stops when historic data ends before target', () => {
@@ -103,6 +106,7 @@ describe('Simulator', () => {
       expect(r.targetReached).toBe(false)
       expect(r.yearsSimulated).toBe(2)
       expect(r.finalInvestment).toBe(400)
+      expect(r.investmentByYear).toEqual([200, 400])
     })
   })
 })

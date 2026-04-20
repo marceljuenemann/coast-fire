@@ -8,8 +8,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -34,8 +34,10 @@ import { PathDetailDialogComponent } from './coast-fire/path-detail-dialog.compo
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatPaginatorModule,
     MatTableModule,
+    NgxEchartsModule.forRoot({
+      echarts: () => import('./echarts-init').then((m) => m.echarts),
+    }),
   ],
   bootstrap: [AppComponent],
 })

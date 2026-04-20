@@ -75,6 +75,12 @@ export interface SingleResult {
    * The amount invested in the portfolio in the last year of the simulation.
    */
   finalInvestment: number
+
+  /**
+   * Portfolio value after each simulated year (index 0 = end of year 1).
+   * Empty when the loop never ran (e.g. already at or above target).
+   */
+  investmentByYear: number[]
 }
 
 export class HistoricReturns implements YoYReturnsSource {
@@ -114,6 +120,7 @@ export class Simulator {
   public singleSimulation(startYear: number, startMonth: number): SingleResult {
     let currentInvestment = this.config.initialInvestment
     let yearsSimulated = 0
+    const investmentByYear: number[] = []
 
     while (currentInvestment < this.config.targetInvestment && yearsSimulated < this.config.maxYears) {
       const nextReturn = this.returns.yoyReturns(startYear + yearsSimulated, startMonth)
@@ -123,6 +130,7 @@ export class Simulator {
 
       currentInvestment = currentInvestment * nextReturn + this.config.annualInvestment
       yearsSimulated++
+      investmentByYear.push(currentInvestment)
     }
 
     return {
@@ -131,6 +139,7 @@ export class Simulator {
       targetReached: currentInvestment >= this.config.targetInvestment,
       yearsSimulated,
       finalInvestment: currentInvestment,
+      investmentByYear,
     }
   }
 }

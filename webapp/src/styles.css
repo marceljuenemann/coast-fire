@@ -9,3 +9,8 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
+/* ECharts tooltips are appended to body; sit above Material dialog overlays. */
+.path-detail-echarts-tooltip {
+  z-index: 10000 !important;
+}

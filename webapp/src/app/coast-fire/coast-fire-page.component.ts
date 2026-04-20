@@ -17,6 +17,10 @@ export class CoastFirePageComponent {
   horizons: HorizonStats[] = [];
   calculating = false;
   showAllYears = false;
+  /** Target FIRE number from the last successful bulk run (for chart Y-axis). */
+  private lastCalculatedTargetInvestment: number | null = null;
+  /** Initial portfolio from the last successful bulk run (chart year 0). */
+  private lastCalculatedInitialInvestment: number | null = null;
 
   readonly form = this.fb.nonNullable.group({
     targetInvestment: this.fb.control(1_000_000, {
@@ -46,6 +50,8 @@ export class CoastFirePageComponent {
       annualInvestment: number;
     };
     try {
+      this.lastCalculatedTargetInvestment = v.targetInvestment;
+      this.lastCalculatedInitialInvestment = v.initialInvestment;
       this.horizons = this.bulkRunner.analyze({
         targetInvestment: v.targetInvestment,
         initialInvestment: v.initialInvestment,
@@ -61,13 +67,21 @@ export class CoastFirePageComponent {
   }
 
   openDetail(row: HorizonStats): void {
+    const raw = this.form.getRawValue() as {
+      targetInvestment: number;
+      initialInvestment: number;
+    };
+    const targetInvestment = this.lastCalculatedTargetInvestment ?? raw.targetInvestment;
+    const initialInvestment = this.lastCalculatedInitialInvestment ?? raw.initialInvestment;
     const data: PathDetailDialogData = {
       horizonYears: row.horizonYears,
       results: row.results,
+      targetInvestment,
+      initialInvestment,
     };
     this.dialog.open(PathDetailDialogComponent, {
       data,
-      width: '920px',
+      width: '960px',
       maxWidth: '94vw',
       maxHeight: '90vh',
       autoFocus: 'dialog',
