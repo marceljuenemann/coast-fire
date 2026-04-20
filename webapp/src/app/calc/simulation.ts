@@ -1,5 +1,10 @@
 import { HISTORIC_PRICES, FIRST_YEAR } from './historic-us-returns';
 
+/** Year-over-year return lookup used by {@link Simulator} and bulk runs. */
+export interface YoYReturnsSource {
+  yoyReturns(year: number, month: number): number | null;
+}
+
 /**
  * Configuration for a Coast FIRE simulation.
  */
@@ -72,7 +77,7 @@ export interface SingleResult {
   finalInvestment: number
 }
 
-export class HistoricReturns {
+export class HistoricReturns implements YoYReturnsSource {
   private historicReturns: number[] = []
 
   constructor() { 
@@ -96,67 +101,36 @@ export class HistoricReturns {
   }
 }
 
-// TODO: jsdoc
 export class Simulator {
-  private returns = new HistoricReturns()
+  public constructor(
+    private readonly config: Config,
+    private readonly returns: YoYReturnsSource = new HistoricReturns(),
+  ) {}
 
-  public constructor(private config: Config) {}
-
-  // TODO: doc
+  /**
+   * Runs one path: each simulated year applies the YoY factor for that calendar
+   * slice, then adds {@link Config.annualInvestment} (contribute after the move).
+   */
   public singleSimulation(startYear: number, startMonth: number): SingleResult {
     let currentInvestment = this.config.initialInvestment
     let yearsSimulated = 0
 
     while (currentInvestment < this.config.targetInvestment && yearsSimulated < this.config.maxYears) {
-      // Do we have another year of historic data?
       const nextReturn = this.returns.yoyReturns(startYear + yearsSimulated, startMonth)
-      if (nextReturn === null) break
+      if (nextReturn === null) {
+        break
+      }
 
-      // Simulate the next year
-      // TODO: implement annual investment
-      currentInvestment *= nextReturn
+      currentInvestment = currentInvestment * nextReturn + this.config.annualInvestment
       yearsSimulated++
-    } 
+    }
 
     return {
       startYear,
       startMonth,
       targetReached: currentInvestment >= this.config.targetInvestment,
       yearsSimulated,
-      finalInvestment: currentInvestment
+      finalInvestment: currentInvestment,
     }
   }
 }
-
-
-export class BulkSimulation {
-
-}
-
-
-/**
- * 
- * TODO:
- * 
- * 
-- Simulation
-  - Config
-  - runs: SimulationRun[]
-    - StartYear
-    - StartMonth
-    - Target reached
-    - Years simulated
-    - FinalInvestment
-    - targetReachedAfterYears(years): boolean | null
-  - resultAfterYears(): SimulationResult[]
-    - successfulRuns
-    - unsuccessfulRuns
-    - totalRuns
-
-1. Build all those objects one after the other
-1. Write tests as we go :)
-1. Eventually wanna have a nice graph with probabilites for each year span
-1. Nice to have: Graph showing actual amounts simulated, like in that one FIRE simulator
-  - Might be a very confusing visualization though...
-
- */
