@@ -29,6 +29,34 @@ export class HorizonProbabilityChartComponent implements OnChanges {
 
   private latestHorizons: HorizonStats[] = [];
 
+  /** Smallest horizon where success rate ≥ 50%. */
+  get yearsTo50(): number | null {
+    return firstHorizonMeetingProbability(this.latestHorizons, 0.5);
+  }
+
+  /** Smallest horizon where success rate ≥ 90%. */
+  get yearsTo90(): number | null {
+    return firstHorizonMeetingProbability(this.latestHorizons, 0.9);
+  }
+
+  /** Smallest horizon where every simulated path succeeds (100%). */
+  get yearsTo100(): number | null {
+    return firstHorizonWithFullSuccess(this.latestHorizons);
+  }
+
+  formatYearsLabel(years: number | null): string {
+    if (years === null) {
+      return '—';
+    }
+    return years === 1 ? '1 year' : `${years} years`;
+  }
+
+  /** Full sentence for screen readers (matches visible copy). */
+  summaryAriaLabel(years: number | null, pctLabel: string): string {
+    const y = this.formatYearsLabel(years);
+    return `${pctLabel} of simulations reach FIRE after ${y}`;
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['horizons']) {
       this.latestHorizons = this.horizons ?? [];
@@ -46,6 +74,26 @@ export class HorizonProbabilityChartComponent implements OnChanges {
       this.horizonSelected.emit(row);
     }
   }
+}
+
+/** First horizon whose empirical probability is at least `threshold` (0–1). */
+function firstHorizonMeetingProbability(horizons: HorizonStats[], threshold: number): number | null {
+  for (const h of horizons) {
+    if (h.totalRuns > 0 && h.probability >= threshold) {
+      return h.horizonYears;
+    }
+  }
+  return null;
+}
+
+/** First horizon where every run succeeded (avoids float edge cases at 100%). */
+function firstHorizonWithFullSuccess(horizons: HorizonStats[]): number | null {
+  for (const h of horizons) {
+    if (h.totalRuns > 0 && h.successes === h.totalRuns) {
+      return h.horizonYears;
+    }
+  }
+  return null;
 }
 
 function buildBarOption(horizons: HorizonStats[]): EChartsOption {
