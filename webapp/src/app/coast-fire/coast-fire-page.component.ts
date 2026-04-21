@@ -3,17 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
-import {
-  CoastFireBulkRunnerService,
-  DEFAULT_MIN_START_YEAR,
-  HorizonStats,
-} from './coast-fire-bulk-runner.service';
+import { CoastFireBulkRunnerService, HorizonStats } from './coast-fire-bulk-runner.service';
 import { PathDetailDialogComponent, PathDetailDialogData } from './path-detail-dialog.component';
-
-interface DatasetOption {
-  label: string;
-  minStartYear: number;
-}
 
 @Component({
   selector: 'app-coast-fire-page',
@@ -21,12 +12,6 @@ interface DatasetOption {
   styleUrls: ['./coast-fire-page.component.css'],
 })
 export class CoastFirePageComponent implements OnInit, OnDestroy {
-  readonly datasetOptions: DatasetOption[] = [
-    { label: `Shiller composite since ${DEFAULT_MIN_START_YEAR}`, minStartYear: DEFAULT_MIN_START_YEAR },
-    { label: 'S&P composite since 1927', minStartYear: 1927 },
-    { label: 'S&P 500 since 1957', minStartYear: 1957 },
-  ];
-
   horizons: HorizonStats[] = [];
   private recalculateSub?: Subscription;
   /** Target FIRE number from the last successful bulk run (for chart Y-axis). */

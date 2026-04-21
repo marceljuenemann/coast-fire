@@ -7,7 +7,7 @@ import {
   MAX_HORIZON_CAP,
 } from '../calc/bulk-simulation';
 
-export { DEFAULT_MIN_START_YEAR, MAX_HORIZON_CAP } from '../calc/bulk-simulation';
+export { MAX_HORIZON_CAP } from '../calc/bulk-simulation';
 export type { HorizonStats } from '../calc/bulk-simulation';
 
 export interface CoastFireFormValues {

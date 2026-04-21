@@ -7,9 +7,6 @@ import {
   YoYReturnsSource,
 } from './simulation';
 
-/** Start years before this are excluded from bulk runs. */
-export const DEFAULT_MIN_START_YEAR = 1900;
-
 /** Upper bound for horizon rows (simulations never run past this many years). */
 export const MAX_HORIZON_CAP = 40;
 
