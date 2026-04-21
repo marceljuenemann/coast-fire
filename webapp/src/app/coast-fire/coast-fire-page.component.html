@@ -1,11 +1,33 @@
 <div class="page">
   <header class="hero">
-    <h1>Coast FIRE</h1>
+    <h1>Coast FIRE Backtesting</h1>
     <p class="lede">
-      See how often a portfolio would have reached your FIRE number within different time horizons, using
-      historic US market returns.
+      Estimate your Coast FIRE probability using real historic US stock market return paths instead of a single,
+      constant return assumption.
     </p>
   </header>
+
+  <section class="panel how-it-works" aria-labelledby="how-it-works-heading">
+    <h2 id="how-it-works-heading">How it works</h2>
+    <p>
+      For each horizon, the calculator runs simulations for every historic starting month and year, then applies
+      year-over-year market returns from Robert Shiller's US stock market dataset.
+    </p>
+    <p>
+      A path counts as successful once your portfolio reaches your FIRE number within the selected time horizon.
+      This reflects sequence-of-returns risk that constant-return calculators cannot capture.
+    </p>
+    <p>
+      Dataset source:
+      <a href="http://www.econ.yale.edu/~shiller/data.htm" target="_blank" rel="noopener noreferrer">
+        Yale / Robert Shiller historical data
+      </a>
+    </p>
+    <p class="disclaimer">
+      <strong>Disclaimer:</strong> This is alpha software, provided as-is, and is for educational purposes only.
+      It is not financial advice.
+    </p>
+  </section>
 
   <mat-card class="panel">
     <mat-card-title>Your numbers</mat-card-title>

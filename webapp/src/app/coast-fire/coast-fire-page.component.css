@@ -5,22 +5,47 @@
 }
 
 .hero {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
+  padding: 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(63, 81, 181, 0.12), rgba(63, 81, 181, 0.02));
+  border: 1px solid rgba(63, 81, 181, 0.2);
 }
 
 .hero h1 {
   margin: 0 0 8px;
-  font-size: 2rem;
-  font-weight: 500;
+  font-size: 2.2rem;
+  font-weight: 600;
   letter-spacing: -0.02em;
 }
 
 .lede {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.05rem;
   line-height: 1.5;
   color: rgba(0, 0, 0, 0.65);
-  max-width: 52ch;
+  max-width: 62ch;
+}
+
+.how-it-works {
+  margin-bottom: 24px;
+  padding: 16px 18px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 10px;
+}
+
+.how-it-works h2 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+}
+
+.how-it-works p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.how-it-works a {
+  color: #3949ab;
 }
 
 .panel {
@@ -34,14 +59,14 @@
 }
 
 .disclaimer {
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 0.9rem;
+  line-height: 1.5;
   color: rgba(0, 0, 0, 0.7);
-  margin: 0 0 16px;
-  padding: 10px 12px;
-  background: rgba(63, 81, 181, 0.06);
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  background: rgba(255, 152, 0, 0.12);
   border-radius: 8px;
-  border-left: 4px solid #5c6bc0;
+  border-left: 4px solid #ef6c00;
 }
 
 .fields {
