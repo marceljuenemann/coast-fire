@@ -1,7 +1,7 @@
 <div class="summary" *ngIf="statsRows.length">
-  <h3>Chance to reach your FIRE number within …</h3>
-  <p class="sub">Each row uses historic US returns (Shiller); click a row for every starting month and year.</p>
-
+  <p class="sub">
+    Click on a year to see detailed simulation results.
+  </p>
   <table mat-table [dataSource]="statsRows" class="horizon-table">
     <ng-container matColumnDef="years">
       <th mat-header-cell *matHeaderCellDef>Horizon</th>

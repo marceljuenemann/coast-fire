@@ -27,27 +27,6 @@
   max-width: 62ch;
 }
 
-.how-it-works {
-  margin-bottom: 24px;
-  padding: 16px 18px;
-  background: rgba(0, 0, 0, 0.02);
-  border-radius: 10px;
-}
-
-.how-it-works h2 {
-  margin: 0 0 10px;
-  font-size: 1.2rem;
-}
-
-.how-it-works p {
-  margin: 0;
-  line-height: 1.5;
-}
-
-.how-it-works a {
-  color: #3949ab;
-}
-
 .panel {
   margin-bottom: 20px;
 }
@@ -63,7 +42,7 @@
   font-size: 0.9rem;
   line-height: 1.5;
   color: rgba(0, 0, 0, 0.7);
-  margin: 14px 0 0;
+  margin: 14px 0;
   padding: 12px 14px;
   background: rgba(255, 152, 0, 0.12);
   border-radius: 8px;

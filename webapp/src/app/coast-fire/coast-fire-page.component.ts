@@ -42,7 +42,7 @@ export class CoastFirePageComponent implements OnInit, OnDestroy {
       validators: [Validators.required, Validators.min(0)],
     }),
     annualInvestment: this.fb.control(0, { validators: [Validators.required] }),
-    minStartYear: this.fb.control(DEFAULT_MIN_START_YEAR, { validators: [Validators.required] }),
+    minStartYear: this.fb.control(1927, { validators: [Validators.required] }),
   });
 
   constructor(

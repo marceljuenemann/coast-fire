@@ -2,56 +2,37 @@
   <header class="hero">
     <h1>Coast FIRE Backtesting</h1>
     <p class="lede">
-      Estimate your Coast FIRE probability using real historic US stock market return paths instead of a single,
-      constant return assumption.
+      Estimate how long you need to coast to reach financial independence using historic
+      US stock market return paths
     </p>
   </header>
 
-  <section class="panel how-it-works" aria-labelledby="how-it-works-heading">
-    <h2 id="how-it-works-heading">How it works</h2>
-    <p>
-      For each horizon, the calculator runs simulations for every historic starting month and year, then applies
-      year-over-year market returns from Robert Shiller's US stock market dataset.
-    </p>
-    <p>
-      A path counts as successful once your portfolio reaches your FIRE number within the selected time horizon.
-      This reflects sequence-of-returns risk that constant-return calculators cannot capture.
-    </p>
-    <p>
-      Dataset source:
-      <a href="http://www.econ.yale.edu/~shiller/data.htm" target="_blank" rel="noopener noreferrer">
-        Yale / Robert Shiller historical data
-      </a>
-    </p>
-    <p class="disclaimer">
-      <strong>Disclaimer:</strong> This is alpha software, provided as-is, and is for educational purposes only.
-      It is not financial advice.
-    </p>
-  </section>
+  <p class="disclaimer">
+    <strong>Disclaimer:</strong> This is alpha software, provided as-is, and is for educational purposes only.
+    It is not financial advice.
+  </p>
 
   <mat-card class="panel">
-    <mat-card-title>Inputs</mat-card-title>
     <mat-card-content>
       <form [formGroup]="form" novalidate>
         <div class="fields">
           <mat-form-field appearance="outline">
-            <mat-label>FIRE number (target)</mat-label>
+            <mat-label>FIRE number (target portfolio value)</mat-label>
             <input matInput type="number" formControlName="targetInvestment" min="1" step="1000" />
             <mat-error *ngIf="form.controls.targetInvestment.hasError('required')">Required</mat-error>
             <mat-error *ngIf="form.controls.targetInvestment.hasError('min')">Must be at least 1</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Current investments</mat-label>
+            <mat-label>Current portfolio value</mat-label>
             <input matInput type="number" formControlName="initialInvestment" min="0" step="1000" />
             <mat-error *ngIf="form.controls.initialInvestment.hasError('required')">Required</mat-error>
             <mat-error *ngIf="form.controls.initialInvestment.hasError('min')">Cannot be negative</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Annual investment (can be negative)</mat-label>
+            <mat-label>Additional annual investment (use negative number for withdrawals)</mat-label>
             <input matInput type="number" formControlName="annualInvestment" step="1000" />
-            <mat-hint>Use 0 for classic coast FIRE; negative = yearly withdrawal.</mat-hint>
             <mat-error *ngIf="form.controls.annualInvestment.hasError('required')">Required</mat-error>
           </mat-form-field>
 
@@ -62,6 +43,12 @@
               <mat-option [value]="1927">S&amp;P composite since 1927</mat-option>
               <mat-option [value]="1957">S&amp;P 500 since 1957</mat-option>
             </mat-select>
+            <mat-hint>
+              Dataset source:
+              <a href="http://www.econ.yale.edu/~shiller/data.htm" target="_blank" rel="noopener noreferrer">
+                Yale / Robert Shiller historical data
+              </a>
+            </mat-hint>
           </mat-form-field>
         </div>
 
