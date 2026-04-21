@@ -8,10 +8,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 import { HorizonStats } from './coast-fire-bulk-runner.service';
 import { CoastFireBulkRunnerService } from './coast-fire-bulk-runner.service';
 import { CoastFirePageComponent } from './coast-fire-page.component';
+import { HorizonProbabilityChartComponent } from './horizon-probability-chart.component';
 import { HorizonSummaryTableComponent } from './horizon-summary-table.component';
 
 describe('CoastFirePageComponent', () => {
@@ -34,7 +36,11 @@ describe('CoastFirePageComponent', () => {
     bulkRunner.analyze.and.returnValue(mockRows);
 
     await TestBed.configureTestingModule({
-      declarations: [CoastFirePageComponent, HorizonSummaryTableComponent],
+      declarations: [
+        CoastFirePageComponent,
+        HorizonProbabilityChartComponent,
+        HorizonSummaryTableComponent,
+      ],
       imports: [
         BrowserAnimationsModule,
         ReactiveFormsModule,
@@ -45,6 +51,9 @@ describe('CoastFirePageComponent', () => {
         MatInputModule,
         MatSelectModule,
         MatTableModule,
+        NgxEchartsModule.forRoot({
+          echarts: () => import('../echarts-init').then((m) => m.echarts),
+        }),
       ],
       providers: [
         { provide: CoastFireBulkRunnerService, useValue: bulkRunner },

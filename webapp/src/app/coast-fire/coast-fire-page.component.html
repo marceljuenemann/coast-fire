@@ -71,6 +71,10 @@
 
   <mat-card class="panel results" *ngIf="horizons.length">
     <mat-card-content>
+      <app-horizon-probability-chart
+        [horizons]="horizons"
+        (horizonSelected)="openDetail($event)"
+      ></app-horizon-probability-chart>
       <app-horizon-summary-table [horizons]="horizons" (rowSelected)="openDetail($event)"></app-horizon-summary-table>
     </mat-card-content>
   </mat-card>

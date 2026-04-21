@@ -10,15 +10,10 @@ Source: http://www.econ.yale.edu/~shiller/data.htm
 
 ## TODO
 
-- Chart Year cut off
-- Years
-    - Always 40 years
-    - Expand button
-    - Remove submit buttons
-- Change start year
-- UI inputs
-- Disclaimers / alpha warning
-- How it works
+- Try a bar chart instead of table
+
+
+- Green / red lines
 
 - Analytics
 - Mobile friendly

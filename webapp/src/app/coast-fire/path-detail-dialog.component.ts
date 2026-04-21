@@ -67,11 +67,20 @@ function buildPathChartOption(data: PathDetailDialogData): EChartsOption {
   const { horizonYears, results, targetInvestment, initialInvestment } = data;
   const categories = Array.from({ length: horizonYears + 1 }, (_, i) => String(i));
 
-  const lineRgba = 'rgba(57, 73, 171, 0.09)';
-  const lineEmphasisRgba = 'rgba(26, 35, 126, 0.9)';
-  const symbolBorder = 'rgba(57, 73, 171, 0.28)';
+  const successLineRgba = 'rgba(46, 125, 50, 0.14)';
+  const successEmphasisRgba = 'rgba(27, 94, 32, 0.92)';
+  const successSymbolBorder = 'rgba(46, 125, 50, 0.35)';
+
+  const failLineRgba = 'rgba(211, 47, 47, 0.12)';
+  const failEmphasisRgba = 'rgba(183, 28, 28, 0.92)';
+  const failSymbolBorder = 'rgba(211, 47, 47, 0.32)';
 
   const lineSeries: EChartsOption['series'] = results.map((r) => {
+    const success = r.targetReached;
+    const lineRgba = success ? successLineRgba : failLineRgba;
+    const lineEmphasisRgba = success ? successEmphasisRgba : failEmphasisRgba;
+    const symbolBorder = success ? successSymbolBorder : failSymbolBorder;
+
     const row: (number | null)[] = [initialInvestment];
     for (let i = 0; i < horizonYears; i++) {
       row.push(i < r.investmentByYear.length ? r.investmentByYear[i] : null);
