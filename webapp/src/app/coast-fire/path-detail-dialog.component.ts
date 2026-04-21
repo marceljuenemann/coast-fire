@@ -1,6 +1,5 @@
-import { Component, Inject, OnDestroy } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import type { ECharts } from 'echarts/core';
 import type { EChartsOption } from 'echarts';
 
 import { SingleResult } from '../calc/simulation';
@@ -51,130 +50,16 @@ function formatAxisValue(v: number): string {
   return String(Math.round(v));
 }
 
-/** Portfolio value at chart dataIndex (0 = year 0 / current). */
-function valueAtYear(
-  r: SingleResult,
-  dataIndex: number,
-  initialInvestment: number,
-): number | null {
-  if (dataIndex === 0) {
-    return initialInvestment;
-  }
-  const yi = dataIndex - 1;
-  if (yi < r.investmentByYear.length) {
-    return r.investmentByYear[yi];
-  }
-  return null;
-}
-
 @Component({
   selector: 'app-path-detail-dialog',
   templateUrl: './path-detail-dialog.component.html',
   styleUrls: ['./path-detail-dialog.component.css'],
 })
-export class PathDetailDialogComponent implements OnDestroy {
+export class PathDetailDialogComponent {
   readonly chartOption: EChartsOption;
-
-  private removeZrListeners: (() => void) | null = null;
-  private tipRaf = 0;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: PathDetailDialogData) {
     this.chartOption = buildPathChartOption(data);
-  }
-
-  ngOnDestroy(): void {
-    cancelAnimationFrame(this.tipRaf);
-    this.detachZrListeners();
-  }
-
-  onChartInit(chart: ECharts): void {
-    this.detachZrListeners();
-
-    const zr = chart.getZr();
-    const gridFinder = { gridIndex: 0 as const };
-    const { results, horizonYears, initialInvestment } = this.data;
-    const nCat = horizonYears + 1;
-
-    const onMove = (ev: { offsetX: number; offsetY: number }): void => {
-      if (chart.isDisposed()) {
-        return;
-      }
-      if (!chart.containPixel(gridFinder, [ev.offsetX, ev.offsetY])) {
-        chart.dispatchAction({ type: 'hideTip' });
-        return;
-      }
-
-      let bestJ = 0;
-      let bestDx = Infinity;
-      for (let j = 0; j < nCat; j++) {
-        const pxPair = chart.convertToPixel(gridFinder, [String(j), 0]);
-        if (!pxPair) {
-          continue;
-        }
-        const dx = Math.abs(pxPair[0] - ev.offsetX);
-        if (dx < bestDx) {
-          bestDx = dx;
-          bestJ = j;
-        }
-      }
-
-      const from = chart.convertFromPixel(gridFinder, [ev.offsetX, ev.offsetY]);
-      const yPointer = from?.[1];
-      if (yPointer == null || !Number.isFinite(yPointer)) {
-        chart.dispatchAction({ type: 'hideTip' });
-        return;
-      }
-
-      let bestI = -1;
-      let bestDist = Infinity;
-      for (let i = 0; i < results.length; i++) {
-        const v = valueAtYear(results[i], bestJ, initialInvestment);
-        if (v == null) {
-          continue;
-        }
-        const d = Math.abs(v - yPointer);
-        if (d < bestDist) {
-          bestDist = d;
-          bestI = i;
-        }
-      }
-
-      if (bestI < 0) {
-        chart.dispatchAction({ type: 'hideTip' });
-        return;
-      }
-
-      cancelAnimationFrame(this.tipRaf);
-      this.tipRaf = requestAnimationFrame(() => {
-        if (chart.isDisposed()) {
-          return;
-        }
-        chart.dispatchAction({
-          type: 'showTip',
-          seriesIndex: bestI,
-          dataIndex: bestJ,
-        });
-      });
-    };
-
-    const onGlobalOut = (): void => {
-      cancelAnimationFrame(this.tipRaf);
-      if (!chart.isDisposed()) {
-        chart.dispatchAction({ type: 'hideTip' });
-      }
-    };
-
-    zr.on('mousemove', onMove);
-    zr.on('globalout', onGlobalOut);
-    this.removeZrListeners = () => {
-      zr.off('mousemove', onMove);
-      zr.off('globalout', onGlobalOut);
-    };
-  }
-
-  private detachZrListeners(): void {
-    this.removeZrListeners?.();
-    this.removeZrListeners = null;
   }
 }
 
@@ -184,8 +69,9 @@ function buildPathChartOption(data: PathDetailDialogData): EChartsOption {
 
   const lineRgba = 'rgba(57, 73, 171, 0.09)';
   const lineEmphasisRgba = 'rgba(26, 35, 126, 0.9)';
+  const symbolBorder = 'rgba(57, 73, 171, 0.28)';
 
-  const series: EChartsOption['series'] = results.map((r) => {
+  const lineSeries: EChartsOption['series'] = results.map((r) => {
     const row: (number | null)[] = [initialInvestment];
     for (let i = 0; i < horizonYears; i++) {
       row.push(i < r.investmentByYear.length ? r.investmentByYear[i] : null);
@@ -194,12 +80,20 @@ function buildPathChartOption(data: PathDetailDialogData): EChartsOption {
       type: 'line',
       name: startLabel(r),
       data: row,
-      showSymbol: false,
-      triggerLineEvent: true,
+      showSymbol: true,
+      showAllSymbol: true,
+      symbol: 'circle',
+      symbolSize: 4,
+      triggerLineEvent: false,
       connectNulls: false,
       lineStyle: {
         width: 2,
         color: lineRgba,
+      },
+      itemStyle: {
+        color: '#ffffff',
+        borderColor: symbolBorder,
+        borderWidth: 1,
       },
       emphasis: {
         focus: 'series',
@@ -208,6 +102,11 @@ function buildPathChartOption(data: PathDetailDialogData): EChartsOption {
           width: 3,
           color: lineEmphasisRgba,
         },
+        itemStyle: {
+          color: '#ffffff',
+          borderColor: lineEmphasisRgba,
+          borderWidth: 1.5,
+        },
       },
     };
   });
@@ -215,6 +114,8 @@ function buildPathChartOption(data: PathDetailDialogData): EChartsOption {
   return {
     animation: false,
     tooltip: {
+      show: true,
+      showContent: true,
       trigger: 'item',
       confine: false,
       appendToBody: true,
@@ -224,29 +125,34 @@ function buildPathChartOption(data: PathDetailDialogData): EChartsOption {
         if (params == null || Array.isArray(params)) {
           return '';
         }
-        const idx = params.dataIndex ?? 0;
-        const val = params.value as number;
-        if (typeof val !== 'number' || Number.isNaN(val)) {
+        if (params.seriesType !== 'line') {
           return '';
         }
-        const name = params.seriesName ?? '';
-        const yearLine =
-          idx === 0 ? `Year 0 (current): ${formatCurrency(val)}` : `Year ${idx}: ${formatCurrency(val)}`;
-        return `${name}<br/>${yearLine}`;
+        const raw = params.value;
+        if (raw == null || raw === '-' || typeof raw !== 'number' || Number.isNaN(raw)) {
+          return '';
+        }
+        const dataIndex = params.dataIndex ?? 0;
+        const monthYear = (params.seriesName ?? '').trim();
+        const yearLabel = dataIndex === 0 ? 'Year 0 (current)' : `Year ${dataIndex}`;
+        const simulationLine = monthYear
+          ? `Simulation starting ${monthYear}`
+          : 'Simulation starting';
+        return `${yearLabel}: ${formatCurrency(raw)}<br/>${simulationLine}`;
       },
     },
     grid: {
       left: 56,
       right: 20,
       top: 40,
-      bottom: 36,
+      bottom: 54,
       containLabel: false,
     },
     xAxis: {
       type: 'category',
       name: 'Year',
       nameLocation: 'middle',
-      nameGap: 28,
+      nameGap: 36,
       boundaryGap: false,
       data: categories,
     },
@@ -259,6 +165,6 @@ function buildPathChartOption(data: PathDetailDialogData): EChartsOption {
         formatter: (v: number) => formatAxisValue(v),
       },
     },
-    series,
+    series: lineSeries,
   };
 }

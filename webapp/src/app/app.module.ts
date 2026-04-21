@@ -8,6 +8,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { NgxEchartsModule } from 'ngx-echarts';
 
@@ -34,6 +36,8 @@ import { PathDetailDialogComponent } from './coast-fire/path-detail-dialog.compo
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
+    MatSlideToggleModule,
     MatTableModule,
     NgxEchartsModule.forRoot({
       echarts: () => import('./echarts-init').then((m) => m.echarts),

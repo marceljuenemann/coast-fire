@@ -1,14 +1,13 @@
-<h2 mat-dialog-title>Paths for {{ data.horizonYears }} year horizon</h2>
+<h2 mat-dialog-title>Simulations for {{ data.horizonYears }}-year time horizon</h2>
 
 <mat-dialog-content class="path-detail-content">
-  <p class="meta">{{ data.results.length }} historic starting points (all months, min. start year 1900).</p>
+  <p class="meta">Hover over the chart to see results of the {{ data.results.length }} simulations.</p>
   <div class="chart-wrap mat-elevation-z1">
     <div
       echarts
       class="paths-chart"
       [options]="chartOption"
       [initOpts]="{ renderer: 'canvas' }"
-      (chartInit)="onChartInit($event)"
     ></div>
   </div>
 </mat-dialog-content>

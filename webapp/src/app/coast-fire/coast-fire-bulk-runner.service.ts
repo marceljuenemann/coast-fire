@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import {
   BulkAnalyzeInput,
   BulkSimulation,
-  DEFAULT_MIN_START_YEAR,
   HorizonStats,
   MAX_HORIZON_CAP,
 } from '../calc/bulk-simulation';
@@ -15,6 +14,7 @@ export interface CoastFireFormValues {
   targetInvestment: number;
   initialInvestment: number;
   annualInvestment: number;
+  minStartYear: number;
 }
 
 @Injectable({
@@ -28,7 +28,7 @@ export class CoastFireBulkRunnerService {
       initialInvestment: values.initialInvestment,
       annualInvestment: values.annualInvestment,
       targetInvestment: values.targetInvestment,
-      minStartYear: DEFAULT_MIN_START_YEAR,
+      minStartYear: values.minStartYear,
       maxHorizonCap: MAX_HORIZON_CAP,
     };
     return this.bulkSimulation.analyze(input);

@@ -1,22 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 
 import {
   CoastFireBulkRunnerService,
+  DEFAULT_MIN_START_YEAR,
   HorizonStats,
 } from './coast-fire-bulk-runner.service';
 import { PathDetailDialogComponent, PathDetailDialogData } from './path-detail-dialog.component';
+
+interface DatasetOption {
+  label: string;
+  minStartYear: number;
+}
 
 @Component({
   selector: 'app-coast-fire-page',
   templateUrl: './coast-fire-page.component.html',
   styleUrls: ['./coast-fire-page.component.css'],
 })
-export class CoastFirePageComponent {
+export class CoastFirePageComponent implements OnInit, OnDestroy {
+  readonly datasetOptions: DatasetOption[] = [
+    { label: `Shiller composite since ${DEFAULT_MIN_START_YEAR}`, minStartYear: DEFAULT_MIN_START_YEAR },
+    { label: 'S&P composite since 1927', minStartYear: 1927 },
+    { label: 'S&P 500 since 1957', minStartYear: 1957 },
+  ];
+
   horizons: HorizonStats[] = [];
-  calculating = false;
   showAllYears = false;
+  private recalculateSub?: Subscription;
   /** Target FIRE number from the last successful bulk run (for chart Y-axis). */
   private lastCalculatedTargetInvestment: number | null = null;
   /** Initial portfolio from the last successful bulk run (chart year 0). */
@@ -30,6 +43,7 @@ export class CoastFirePageComponent {
       validators: [Validators.required, Validators.min(0)],
     }),
     annualInvestment: this.fb.control(0, { validators: [Validators.required] }),
+    minStartYear: this.fb.control(DEFAULT_MIN_START_YEAR, { validators: [Validators.required] }),
   });
 
   constructor(
@@ -38,28 +52,34 @@ export class CoastFirePageComponent {
     private readonly dialog: MatDialog,
   ) {}
 
-  calculate(): void {
-    if (this.form.invalid || this.calculating) {
-      this.form.markAllAsTouched();
+  ngOnInit(): void {
+    this.recalculateSub = this.form.valueChanges.subscribe(() => this.recalculate());
+    this.recalculate();
+  }
+
+  ngOnDestroy(): void {
+    this.recalculateSub?.unsubscribe();
+  }
+
+  private recalculate(): void {
+    if (this.form.invalid) {
+      this.horizons = [];
       return;
     }
-    this.calculating = true;
     const v = this.form.getRawValue() as {
       targetInvestment: number;
       initialInvestment: number;
       annualInvestment: number;
+      minStartYear: number;
     };
-    try {
-      this.lastCalculatedTargetInvestment = v.targetInvestment;
-      this.lastCalculatedInitialInvestment = v.initialInvestment;
-      this.horizons = this.bulkRunner.analyze({
-        targetInvestment: v.targetInvestment,
-        initialInvestment: v.initialInvestment,
-        annualInvestment: v.annualInvestment,
-      });
-    } finally {
-      this.calculating = false;
-    }
+    this.lastCalculatedTargetInvestment = v.targetInvestment;
+    this.lastCalculatedInitialInvestment = v.initialInvestment;
+    this.horizons = this.bulkRunner.analyze({
+      targetInvestment: v.targetInvestment,
+      initialInvestment: v.initialInvestment,
+      annualInvestment: v.annualInvestment,
+      minStartYear: v.minStartYear,
+    });
   }
 
   toggleAllYears(): void {

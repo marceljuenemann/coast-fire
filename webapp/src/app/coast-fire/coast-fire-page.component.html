@@ -1,21 +1,38 @@
 <div class="page">
   <header class="hero">
-    <h1>Coast FIRE</h1>
+    <h1>Coast FIRE Backtesting</h1>
     <p class="lede">
-      See how often a portfolio would have reached your FIRE number within different time horizons, using
-      historic US market returns.
+      Estimate your Coast FIRE probability using real historic US stock market return paths instead of a single,
+      constant return assumption.
     </p>
   </header>
 
-  <mat-card class="panel">
-    <mat-card-title>Your numbers</mat-card-title>
-    <mat-card-content>
-      <p class="disclaimer">
-        <strong>Note:</strong> The engine does not yet apply annual investment or withdrawals; this field is
-        included so the UI matches the full model once that logic ships.
-      </p>
+  <section class="panel how-it-works" aria-labelledby="how-it-works-heading">
+    <h2 id="how-it-works-heading">How it works</h2>
+    <p>
+      For each horizon, the calculator runs simulations for every historic starting month and year, then applies
+      year-over-year market returns from Robert Shiller's US stock market dataset.
+    </p>
+    <p>
+      A path counts as successful once your portfolio reaches your FIRE number within the selected time horizon.
+      This reflects sequence-of-returns risk that constant-return calculators cannot capture.
+    </p>
+    <p>
+      Dataset source:
+      <a href="http://www.econ.yale.edu/~shiller/data.htm" target="_blank" rel="noopener noreferrer">
+        Yale / Robert Shiller historical data
+      </a>
+    </p>
+    <p class="disclaimer">
+      <strong>Disclaimer:</strong> This is alpha software, provided as-is, and is for educational purposes only.
+      It is not financial advice.
+    </p>
+  </section>
 
-      <form [formGroup]="form" (ngSubmit)="calculate()" novalidate>
+  <mat-card class="panel">
+    <mat-card-title>Inputs</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form" novalidate>
         <div class="fields">
           <mat-form-field appearance="outline">
             <mat-label>FIRE number (target)</mat-label>
@@ -37,21 +54,17 @@
             <mat-hint>Use 0 for classic coast FIRE; negative = yearly withdrawal.</mat-hint>
             <mat-error *ngIf="form.controls.annualInvestment.hasError('required')">Required</mat-error>
           </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Historic data set</mat-label>
+            <mat-select formControlName="minStartYear">
+              <mat-option [value]="1871">Shiller series since 1871</mat-option>
+              <mat-option [value]="1927">S&amp;P composite since 1927</mat-option>
+              <mat-option [value]="1957">S&amp;P 500 since 1957</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
 
-        <div class="actions">
-          <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || calculating">
-            {{ calculating ? 'Calculating…' : 'Calculate' }}
-          </button>
-          <button
-            mat-stroked-button
-            type="button"
-            (click)="toggleAllYears()"
-            [disabled]="!horizons.length"
-          >
-            {{ showAllYears ? 'Fewer horizons' : 'All years (1 year steps)' }}
-          </button>
-        </div>
       </form>
     </mat-card-content>
   </mat-card>
@@ -63,6 +76,13 @@
         [showAllYears]="showAllYears"
         (rowSelected)="openDetail($event)"
       ></app-horizon-summary-table>
+      <mat-slide-toggle
+        class="results-toggle"
+        [checked]="showAllYears"
+        (change)="toggleAllYears()"
+      >
+        Show every horizon (1-year steps)
+      </mat-slide-toggle>
     </mat-card-content>
   </mat-card>
 </div>
