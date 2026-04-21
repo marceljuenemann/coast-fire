@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 
 import {
   CoastFireBulkRunnerService,
@@ -19,7 +20,7 @@ interface DatasetOption {
   templateUrl: './coast-fire-page.component.html',
   styleUrls: ['./coast-fire-page.component.css'],
 })
-export class CoastFirePageComponent {
+export class CoastFirePageComponent implements OnInit, OnDestroy {
   readonly datasetOptions: DatasetOption[] = [
     { label: `Shiller composite since ${DEFAULT_MIN_START_YEAR}`, minStartYear: DEFAULT_MIN_START_YEAR },
     { label: 'S&P composite since 1927', minStartYear: 1927 },
@@ -27,8 +28,8 @@ export class CoastFirePageComponent {
   ];
 
   horizons: HorizonStats[] = [];
-  calculating = false;
   showAllYears = false;
+  private recalculateSub?: Subscription;
   /** Target FIRE number from the last successful bulk run (for chart Y-axis). */
   private lastCalculatedTargetInvestment: number | null = null;
   /** Initial portfolio from the last successful bulk run (chart year 0). */
@@ -51,30 +52,34 @@ export class CoastFirePageComponent {
     private readonly dialog: MatDialog,
   ) {}
 
-  calculate(): void {
-    if (this.form.invalid || this.calculating) {
-      this.form.markAllAsTouched();
+  ngOnInit(): void {
+    this.recalculateSub = this.form.valueChanges.subscribe(() => this.recalculate());
+    this.recalculate();
+  }
+
+  ngOnDestroy(): void {
+    this.recalculateSub?.unsubscribe();
+  }
+
+  private recalculate(): void {
+    if (this.form.invalid) {
+      this.horizons = [];
       return;
     }
-    this.calculating = true;
     const v = this.form.getRawValue() as {
       targetInvestment: number;
       initialInvestment: number;
       annualInvestment: number;
       minStartYear: number;
     };
-    try {
-      this.lastCalculatedTargetInvestment = v.targetInvestment;
-      this.lastCalculatedInitialInvestment = v.initialInvestment;
-      this.horizons = this.bulkRunner.analyze({
-        targetInvestment: v.targetInvestment,
-        initialInvestment: v.initialInvestment,
-        annualInvestment: v.annualInvestment,
-        minStartYear: v.minStartYear,
-      });
-    } finally {
-      this.calculating = false;
-    }
+    this.lastCalculatedTargetInvestment = v.targetInvestment;
+    this.lastCalculatedInitialInvestment = v.initialInvestment;
+    this.horizons = this.bulkRunner.analyze({
+      targetInvestment: v.targetInvestment,
+      initialInvestment: v.initialInvestment,
+      annualInvestment: v.annualInvestment,
+      minStartYear: v.minStartYear,
+    });
   }
 
   toggleAllYears(): void {
