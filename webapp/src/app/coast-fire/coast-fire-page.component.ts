@@ -4,9 +4,15 @@ import { MatDialog } from '@angular/material/dialog';
 
 import {
   CoastFireBulkRunnerService,
+  DEFAULT_MIN_START_YEAR,
   HorizonStats,
 } from './coast-fire-bulk-runner.service';
 import { PathDetailDialogComponent, PathDetailDialogData } from './path-detail-dialog.component';
+
+interface DatasetOption {
+  label: string;
+  minStartYear: number;
+}
 
 @Component({
   selector: 'app-coast-fire-page',
@@ -14,6 +20,12 @@ import { PathDetailDialogComponent, PathDetailDialogData } from './path-detail-d
   styleUrls: ['./coast-fire-page.component.css'],
 })
 export class CoastFirePageComponent {
+  readonly datasetOptions: DatasetOption[] = [
+    { label: `Shiller composite since ${DEFAULT_MIN_START_YEAR}`, minStartYear: DEFAULT_MIN_START_YEAR },
+    { label: 'S&P composite since 1927', minStartYear: 1927 },
+    { label: 'S&P 500 since 1957', minStartYear: 1957 },
+  ];
+
   horizons: HorizonStats[] = [];
   calculating = false;
   showAllYears = false;
@@ -30,6 +42,7 @@ export class CoastFirePageComponent {
       validators: [Validators.required, Validators.min(0)],
     }),
     annualInvestment: this.fb.control(0, { validators: [Validators.required] }),
+    minStartYear: this.fb.control(DEFAULT_MIN_START_YEAR, { validators: [Validators.required] }),
   });
 
   constructor(
@@ -48,6 +61,7 @@ export class CoastFirePageComponent {
       targetInvestment: number;
       initialInvestment: number;
       annualInvestment: number;
+      minStartYear: number;
     };
     try {
       this.lastCalculatedTargetInvestment = v.targetInvestment;
@@ -56,6 +70,7 @@ export class CoastFirePageComponent {
         targetInvestment: v.targetInvestment,
         initialInvestment: v.initialInvestment,
         annualInvestment: v.annualInvestment,
+        minStartYear: v.minStartYear,
       });
     } finally {
       this.calculating = false;

@@ -56,6 +56,7 @@
 .panel .mat-card-title {
   font-size: 1.1rem;
   font-weight: 500;
+  padding: 4px 0 12px;
 }
 
 .disclaimer {
@@ -72,19 +73,7 @@
 .fields {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-
-@media (min-width: 720px) {
-  .fields {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 16px;
-  }
-
-  .fields mat-form-field:last-child {
-    grid-column: 1 / -1;
-  }
+  gap: 8px;
 }
 
 .actions {
