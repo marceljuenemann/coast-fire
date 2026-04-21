@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Simulations for {{ data.horizonYears }}-year time horizon</h2>
+
+<mat-dialog-content class="path-detail-content">
+  <p class="meta">Hover over the chart to see results of the {{ data.results.length }} simulations. All numbers are in today's value, i.e. are adjusted for inflation.</p>
+  <div class="chart-wrap mat-elevation-z1">
+    <div
+      echarts
+      class="paths-chart"
+      [options]="chartOption"
+      [initOpts]="{ renderer: 'canvas' }"
+    ></div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close type="button">Close</button>
+</mat-dialog-actions>

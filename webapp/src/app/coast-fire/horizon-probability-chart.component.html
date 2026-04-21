@@ -1,0 +1,52 @@
+<div class="overview" *ngIf="horizons?.length">
+  <div class="prob-summary" role="group" aria-label="Years to reach probability thresholds">
+    <div
+      class="prob-box"
+      [attr.aria-label]="summaryAriaLabel(yearsTo50, '50%')"
+    >
+      <p class="prob-line">
+        <span class="prob-top-line">
+          <b class="prob-lead">50% of simulations</b>
+          <span class="prob-after"> reach FIRE after</span>
+        </span>
+        <span class="prob-years-line">{{ formatYearsLabel(yearsTo50) }}</span>
+      </p>
+    </div>
+    <div
+      class="prob-box"
+      [attr.aria-label]="summaryAriaLabel(yearsTo90, '90%')"
+    >
+      <p class="prob-line">
+        <span class="prob-top-line">
+          <b class="prob-lead">90% of simulations</b>
+          <span class="prob-after"> reach FIRE after</span>
+        </span>
+        <span class="prob-years-line">{{ formatYearsLabel(yearsTo90) }}</span>
+      </p>
+    </div>
+    <div
+      class="prob-box"
+      [attr.aria-label]="summaryAriaLabel(yearsTo100, '100%')"
+    >
+      <p class="prob-line">
+        <span class="prob-top-line">
+          <b class="prob-lead">100% of simulations</b>
+          <span class="prob-after"> reach FIRE after</span>
+        </span>
+        <span class="prob-years-line">{{ formatYearsLabel(yearsTo100) }}</span>
+      </p>
+    </div>
+  </div>
+  <p class="prob-footnote" *ngIf="yearsTo50 === null || yearsTo90 === null || yearsTo100 === null">
+    “—” means that level is not reached within the longest simulated horizon.
+  </p>
+  <div class="chart-wrap mat-elevation-z1">
+    <div
+      echarts
+      class="horizon-bar-chart"
+      [options]="chartOption"
+      [initOpts]="{ renderer: 'canvas' }"
+      (chartClick)="onChartClick($event)"
+    ></div>
+  </div>
+</div>

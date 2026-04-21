@@ -1,0 +1,68 @@
+<div class="page">
+  <header class="hero">
+    <h1>Coast FIRE Backtesting</h1>
+    <p class="lede">
+      Estimate how long you need to coast to reach financial independence using historic
+      US stock market return paths
+    </p>
+  </header>
+
+  <p class="disclaimer">
+    <strong>Disclaimer:</strong> This is alpha software, provided as-is, and is for educational purposes only.
+    It is not financial advice.
+  </p>
+
+  <mat-card class="panel">
+    <mat-card-content>
+      <form [formGroup]="form" novalidate>
+        <div class="fields">
+          <mat-form-field appearance="outline">
+            <mat-label>FIRE number (target portfolio value)</mat-label>
+            <input matInput type="number" formControlName="targetInvestment" min="1" step="1000" />
+            <mat-error *ngIf="form.controls.targetInvestment.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.controls.targetInvestment.hasError('min')">Must be at least 1</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Current portfolio value</mat-label>
+            <input matInput type="number" formControlName="initialInvestment" min="0" step="1000" />
+            <mat-error *ngIf="form.controls.initialInvestment.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.controls.initialInvestment.hasError('min')">Cannot be negative</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Additional annual investment (use negative number for withdrawals)</mat-label>
+            <input matInput type="number" formControlName="annualInvestment" step="1000" />
+            <mat-error *ngIf="form.controls.annualInvestment.hasError('required')">Required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Historic data set</mat-label>
+            <mat-select formControlName="minStartYear">
+              <mat-option [value]="1871">Shiller series since 1871</mat-option>
+              <mat-option [value]="1927">S&amp;P composite since 1927</mat-option>
+              <mat-option [value]="1957">S&amp;P 500 since 1957</mat-option>
+            </mat-select>
+            <mat-hint>
+              Dataset source:
+              <a href="http://www.econ.yale.edu/~shiller/data.htm" target="_blank" rel="noopener noreferrer">
+                Yale / Robert Shiller historical data
+              </a>
+            </mat-hint>
+          </mat-form-field>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="panel results" *ngIf="horizons.length">
+    <mat-card-content>
+      <app-horizon-probability-chart
+        [horizons]="horizons"
+        (horizonSelected)="openDetail($event)"
+      ></app-horizon-probability-chart>
+      <app-horizon-summary-table [horizons]="horizons" (rowSelected)="openDetail($event)"></app-horizon-summary-table>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,67 @@
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.hero {
+  margin-bottom: 28px;
+  padding: 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(63, 81, 181, 0.12), rgba(63, 81, 181, 0.02));
+  border: 1px solid rgba(63, 81, 181, 0.2);
+}
+
+.hero h1 {
+  margin: 0 0 8px;
+  font-size: 2.2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.65);
+  max-width: 62ch;
+}
+
+.panel {
+  margin-bottom: 20px;
+}
+
+.panel .mat-mdc-card-title,
+.panel .mat-card-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  padding: 4px 0 12px;
+}
+
+.disclaimer {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.7);
+  margin: 14px 0;
+  padding: 12px 14px;
+  background: rgba(255, 152, 0, 0.12);
+  border-radius: 8px;
+  border-left: 4px solid #ef6c00;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.results mat-card-content {
+  padding-top: 8px;
+}

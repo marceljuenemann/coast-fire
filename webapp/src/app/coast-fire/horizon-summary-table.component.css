@@ -1,0 +1,86 @@
+.summary h3 {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.sub {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.horizon-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.horizon-table .mat-header-cell {
+  border-bottom: none;
+}
+
+.horizon-table .mat-cell {
+  border-bottom: none;
+}
+
+.click-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.click-row:hover,
+.click-row:focus-visible {
+  background-color: rgba(63, 81, 181, 0.08);
+}
+
+.click-row:focus-visible {
+  outline: 2px solid #3f51b5;
+  outline-offset: -2px;
+}
+
+.prob {
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.bar-wrap {
+  display: inline-block;
+  vertical-align: middle;
+  width: 120px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #5c6bc0, #3949ab);
+  border-radius: 4px;
+}
+
+.chevron {
+  font-size: 13px;
+  color: #3949ab;
+  font-weight: 500;
+}
+
+.mat-column-probability {
+  min-width: 200px;
+}
+
+th.mat-header-cell,
+td.mat-cell {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* MDC-based Material table (if enabled) */
+.horizon-table .mat-mdc-header-cell {
+  border-bottom: none;
+}
+
+.horizon-table .mat-mdc-cell {
+  border-bottom: none;
+}
