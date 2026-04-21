@@ -1,39 +1,55 @@
-<div class="summary" *ngIf="visibleRows.length">
+<div class="summary" *ngIf="tableRows.length">
   <h3>Chance to reach your FIRE number within …</h3>
   <p class="sub">Each row uses historic US returns (Shiller); click a row for every starting month and year.</p>
 
-  <table mat-table [dataSource]="visibleRows" class="horizon-table">
+  <table mat-table [dataSource]="tableRows" multiTemplateDataRows class="horizon-table">
     <ng-container matColumnDef="years">
       <th mat-header-cell *matHeaderCellDef>Horizon</th>
-      <td mat-cell *matCellDef="let row">{{ row.horizonYears }} years</td>
+      <td mat-cell *matCellDef="let row">{{ row.stats.horizonYears }} years</td>
     </ng-container>
     <ng-container matColumnDef="probability">
       <th mat-header-cell *matHeaderCellDef>Probability</th>
       <td mat-cell *matCellDef="let row">
-        <span class="prob">{{ row.probability | percent : '1.0-1' }}</span>
+        <span class="prob">{{ row.stats.probability | percent : '1.0-1' }}</span>
         <span class="bar-wrap" aria-hidden="true">
-          <span class="bar" [style.width.%]="row.probability * 100"></span>
+          <span class="bar" [style.width.%]="row.stats.probability * 100"></span>
         </span>
       </td>
     </ng-container>
     <ng-container matColumnDef="counts">
       <th mat-header-cell *matHeaderCellDef>Success / paths</th>
-      <td mat-cell *matCellDef="let row">{{ row.successes }} / {{ row.totalRuns }}</td>
+      <td mat-cell *matCellDef="let row">{{ row.stats.successes }} / {{ row.stats.totalRuns }}</td>
     </ng-container>
     <ng-container matColumnDef="hint">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let row"><span class="chevron">Details</span></td>
     </ng-container>
+
+    <ng-container matColumnDef="gap">
+      <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length" class="gap-cell">
+        <button
+          type="button"
+          class="gap-expand"
+          aria-label="Show more years"
+          (click)="revealGap(row.low, row.high, $event)"
+        >
+          <mat-icon class="gap-expand-icon" aria-hidden="true">unfold_more</mat-icon>
+          Show more years
+        </button>
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr
       mat-row
-      *matRowDef="let row; columns: displayedColumns"
+      *matRowDef="let row; columns: displayedColumns; when: isStatsRow"
       class="click-row"
-      (click)="selectRow(row)"
-      (keyup.enter)="selectRow(row)"
-      (keydown.space)="$event.preventDefault(); selectRow(row)"
+      (click)="selectRow(row.stats)"
+      (keyup.enter)="selectRow(row.stats)"
+      (keydown.space)="$event.preventDefault(); selectRow(row.stats)"
       tabindex="0"
       role="button"
     ></tr>
+    <tr mat-row *matRowDef="let row; columns: gapColumns; when: isGapRow" class="gap-row"></tr>
   </table>
 </div>

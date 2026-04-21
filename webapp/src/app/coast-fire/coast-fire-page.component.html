@@ -71,18 +71,7 @@
 
   <mat-card class="panel results" *ngIf="horizons.length">
     <mat-card-content>
-      <app-horizon-summary-table
-        [horizons]="horizons"
-        [showAllYears]="showAllYears"
-        (rowSelected)="openDetail($event)"
-      ></app-horizon-summary-table>
-      <mat-slide-toggle
-        class="results-toggle"
-        [checked]="showAllYears"
-        (change)="toggleAllYears()"
-      >
-        Show every horizon (1-year steps)
-      </mat-slide-toggle>
+      <app-horizon-summary-table [horizons]="horizons" (rowSelected)="openDetail($event)"></app-horizon-summary-table>
     </mat-card-content>
   </mat-card>
 </div>

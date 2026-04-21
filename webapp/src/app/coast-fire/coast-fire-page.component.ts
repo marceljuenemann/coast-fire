@@ -28,7 +28,6 @@ export class CoastFirePageComponent implements OnInit, OnDestroy {
   ];
 
   horizons: HorizonStats[] = [];
-  showAllYears = false;
   private recalculateSub?: Subscription;
   /** Target FIRE number from the last successful bulk run (for chart Y-axis). */
   private lastCalculatedTargetInvestment: number | null = null;
@@ -80,10 +79,6 @@ export class CoastFirePageComponent implements OnInit, OnDestroy {
       annualInvestment: v.annualInvestment,
       minStartYear: v.minStartYear,
     });
-  }
-
-  toggleAllYears(): void {
-    this.showAllYears = !this.showAllYears;
   }
 
   openDetail(row: HorizonStats): void {

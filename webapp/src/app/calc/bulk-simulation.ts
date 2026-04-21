@@ -10,8 +10,8 @@ import {
 /** Start years before this are excluded from bulk runs. */
 export const DEFAULT_MIN_START_YEAR = 1900;
 
-/** Upper bound for horizon rows and for the “all years” list. */
-export const MAX_HORIZON_CAP = 50;
+/** Upper bound for horizon rows (simulations never run past this many years). */
+export const MAX_HORIZON_CAP = 40;
 
 export interface HorizonStats {
   horizonYears: number;
