@@ -76,6 +76,13 @@
         [showAllYears]="showAllYears"
         (rowSelected)="openDetail($event)"
       ></app-horizon-summary-table>
+      <mat-slide-toggle
+        class="results-toggle"
+        [checked]="showAllYears"
+        (change)="toggleAllYears()"
+      >
+        Show every horizon (1-year steps)
+      </mat-slide-toggle>
     </mat-card-content>
   </mat-card>
 </div>
