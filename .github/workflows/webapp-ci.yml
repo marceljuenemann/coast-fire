@@ -68,12 +68,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Default base is `/` so a custom domain served at the site root resolves JS/CSS
+      # correctly. For the default `https://<user>.github.io/<repo>/` project URL, set
+      # repository variable NG_PAGES_BASE_HREF=/<repo>/ in Actions settings.
       - name: Set Pages base href
         id: base
         run: |
           BASE='${{ vars.NG_PAGES_BASE_HREF }}'
           if [ -z "$BASE" ]; then
-            BASE="/${{ github.event.repository.name }}/"
+            BASE="/"
           fi
           echo "base_href=$BASE" >> "$GITHUB_OUTPUT"
 
