@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import type { EChartsOption } from 'echarts';
 
 import { HorizonStats } from './coast-fire-bulk-runner.service';
@@ -77,7 +70,10 @@ export class HorizonProbabilityChartComponent implements OnChanges {
 }
 
 /** First horizon whose empirical probability is at least `threshold` (0–1). */
-function firstHorizonMeetingProbability(horizons: HorizonStats[], threshold: number): number | null {
+function firstHorizonMeetingProbability(
+  horizons: HorizonStats[],
+  threshold: number,
+): number | null {
   for (const h of horizons) {
     if (h.totalRuns > 0 && h.probability >= threshold) {
       return h.horizonYears;
@@ -100,8 +96,8 @@ function buildBarOption(horizons: HorizonStats[]): EChartsOption {
   if (!horizons.length) {
     return {};
   }
-  const categories = horizons.map((h) => String(h.horizonYears));
-  const data = horizons.map((h) => h.probability);
+  const categories = horizons.map(h => String(h.horizonYears));
+  const data = horizons.map(h => h.probability);
 
   return {
     grid: {

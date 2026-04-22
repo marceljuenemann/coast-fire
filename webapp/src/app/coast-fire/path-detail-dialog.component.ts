@@ -12,20 +12,7 @@ export interface PathDetailDialogData {
   initialInvestment: number;
 }
 
-const MONTHS = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 function startLabel(r: SingleResult): string {
   return `${MONTHS[r.startMonth]} ${r.startYear}`;
@@ -75,7 +62,7 @@ function buildPathChartOption(data: PathDetailDialogData): EChartsOption {
   const failEmphasisRgba = 'rgba(183, 28, 28, 0.92)';
   const failSymbolBorder = 'rgba(211, 47, 47, 0.32)';
 
-  const lineSeries: EChartsOption['series'] = results.map((r) => {
+  const lineSeries: EChartsOption['series'] = results.map(r => {
     const success = r.targetReached;
     const lineRgba = success ? successLineRgba : failLineRgba;
     const lineEmphasisRgba = success ? successEmphasisRgba : failEmphasisRgba;

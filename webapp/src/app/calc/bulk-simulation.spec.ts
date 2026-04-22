@@ -32,7 +32,7 @@ describe('BulkSimulation', () => {
     const bulk = new BulkSimulation(fakeYoYUntilYear(2100));
     const rows = bulk.analyze(trivialTargetInput({ maxHorizonCap: 4 }));
     expect(rows.length).toBe(4);
-    expect(rows.map((r) => r.horizonYears)).toEqual([1, 2, 3, 4]);
+    expect(rows.map(r => r.horizonYears)).toEqual([1, 2, 3, 4]);
   });
 
   it('gives probability 1 when target is already met before any market year', () => {
@@ -52,15 +52,23 @@ describe('BulkSimulation', () => {
     const short = bulkShort.analyze(
       trivialTargetInput({ maxHorizonCap: longHorizon, minStartYear: 1995 }),
     );
-    const rowLong = short.find((r) => r.horizonYears === longHorizon);
-    const rowOne = short.find((r) => r.horizonYears === 1);
+    const rowLong = short.find(r => r.horizonYears === longHorizon);
+    const rowOne = short.find(r => r.horizonYears === 1);
     expect(rowLong && rowOne).toBeTruthy();
-    expect(rowLong!.totalRuns).toBeLessThan(rowOne!.totalRuns);
+    if (!rowLong || !rowOne) {
+      return;
+    }
+    expect(rowLong.totalRuns).toBeLessThan(rowOne.totalRuns);
     const bulkWide = new BulkSimulation(fakeYoYUntilYear(2100));
     const wide = bulkWide.analyze(
       trivialTargetInput({ maxHorizonCap: longHorizon, minStartYear: 1995 }),
     );
-    expect(rowLong!.totalRuns).toBeLessThan(wide.find((r) => r.horizonYears === longHorizon)!.totalRuns);
+    const wideRow = wide.find(r => r.horizonYears === longHorizon);
+    expect(wideRow).toBeDefined();
+    if (!wideRow) {
+      return;
+    }
+    expect(rowLong.totalRuns).toBeLessThan(wideRow.totalRuns);
   });
 
   it('uses real historic series with sane aggregates', () => {
