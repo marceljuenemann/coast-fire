@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,6 +18,7 @@ import { CoastFirePageComponent } from './coast-fire/coast-fire-page.component';
 import { HorizonProbabilityChartComponent } from './coast-fire/horizon-probability-chart.component';
 import { HorizonSummaryTableComponent } from './coast-fire/horizon-summary-table.component';
 import { PathDetailDialogComponent } from './coast-fire/path-detail-dialog.component';
+import { AnalyticsService } from './analytics/analytics.service';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,17 @@ import { PathDetailDialogComponent } from './coast-fire/path-detail-dialog.compo
     NgxEchartsModule.forRoot({
       echarts: () => import('./echarts-init').then(m => m.echarts),
     }),
+  ],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (analytics: AnalyticsService) => {
+        void analytics;
+        return () => undefined;
+      },
+      deps: [AnalyticsService],
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

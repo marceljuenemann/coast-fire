@@ -77,6 +77,15 @@ jobs:
           fi
           echo "base_href=$BASE" >> "$GITHUB_OUTPUT"
 
+      - name: Configure GoatCounter for production build (optional)
+        env:
+          GC_CODE: ${{ secrets.GOATCOUNTER_SITE_CODE }}
+        run: |
+          if [ -n "$GC_CODE" ]; then
+            sed -i 's/enabled: false/enabled: true/' src/environments/environment.prod.ts
+            sed -i "s|siteCode: ''|siteCode: '$GC_CODE'|" src/environments/environment.prod.ts
+          fi
+
       - name: Build for GitHub Pages
         run: npm run build -- --base-href="${{ steps.base.outputs.base_href }}"
 

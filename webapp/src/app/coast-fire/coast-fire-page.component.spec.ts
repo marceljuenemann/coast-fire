@@ -82,30 +82,36 @@ describe('CoastFirePageComponent', () => {
     expect(component.horizons).toEqual(mockRows);
   });
 
-  it('reruns simulation when inputs change', () => {
+  it('reruns simulation when inputs change', done => {
     fixture.detectChanges();
     bulkRunner.analyze.calls.reset();
     bulkRunner.analyze.and.returnValue([]);
 
     component.form.controls.initialInvestment.setValue(400_000);
 
-    expect(bulkRunner.analyze).toHaveBeenCalledTimes(1);
-    expect(bulkRunner.analyze).toHaveBeenCalledWith(
-      jasmine.objectContaining({
-        initialInvestment: 400_000,
-      }),
-    );
+    setTimeout(() => {
+      expect(bulkRunner.analyze).toHaveBeenCalledTimes(1);
+      expect(bulkRunner.analyze).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          initialInvestment: 400_000,
+        }),
+      );
+      done();
+    }, 450);
   });
 
-  it('clears results and skips analyze when form is invalid', () => {
+  it('clears results and skips analyze when form is invalid', done => {
     fixture.detectChanges();
     bulkRunner.analyze.calls.reset();
     component.horizons = mockRows;
 
     component.form.controls.targetInvestment.setValue(0);
 
-    expect(component.form.invalid).toBeTrue();
-    expect(component.horizons).toEqual([]);
-    expect(bulkRunner.analyze).not.toHaveBeenCalled();
+    setTimeout(() => {
+      expect(component.form.invalid).toBeTrue();
+      expect(component.horizons).toEqual([]);
+      expect(bulkRunner.analyze).not.toHaveBeenCalled();
+      done();
+    }, 450);
   });
 });

@@ -2,7 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
+import { AnalyticsService } from '../analytics/analytics.service';
 import { CoastFireBulkRunnerService, HorizonStats } from './coast-fire-bulk-runner.service';
 import { PathDetailDialogComponent, PathDetailDialogData } from './path-detail-dialog.component';
 
@@ -34,11 +36,26 @@ export class CoastFirePageComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private readonly bulkRunner: CoastFireBulkRunnerService,
     private readonly dialog: MatDialog,
+    private readonly analytics: AnalyticsService,
   ) {}
 
   ngOnInit(): void {
-    this.recalculateSub = this.form.valueChanges.subscribe(() => this.recalculate());
+    this.recalculateSub = this.form.valueChanges
+      .pipe(
+        debounceTime(400),
+        map(() => JSON.stringify(this.form.getRawValue())),
+        distinctUntilChanged(),
+      )
+      .subscribe(() => {
+        this.recalculate();
+        if (this.form.valid) {
+          this.analytics.maybeTrackBulkAnalyze();
+        }
+      });
     this.recalculate();
+    if (this.form.valid) {
+      this.analytics.maybeTrackBulkAnalyze();
+    }
   }
 
   ngOnDestroy(): void {
