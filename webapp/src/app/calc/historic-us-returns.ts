@@ -1,13 +1,12 @@
-
-export const FIRST_YEAR = 1871
+export const FIRST_YEAR = 1871;
 
 /**
  * Real Total Return Price from Robert Shiller's dataset at https://shillerdata.com/
  */
 export const HISTORIC_PRICES = [
-  109.05001849333,    // Jan 1871
-  107.765291222628,   // Feb 1871
-  109.298844726899,   // ...
+  109.05001849333, // Jan 1871
+  107.765291222628, // Feb 1871
+  109.298844726899, // ...
   117.171190990929,
   123.479272880482,
   124.951095741042,
@@ -1837,5 +1836,5 @@ export const HISTORIC_PRICES = [
   2859155.86591632,
   2960563.16163842,
   2924472.27190763,
-  2961387.72495703    // September 2023
-]
+  2961387.72495703, // September 2023
+];

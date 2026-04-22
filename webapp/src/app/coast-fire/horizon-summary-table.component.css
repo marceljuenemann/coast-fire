@@ -70,6 +70,12 @@
   min-width: 200px;
 }
 
+@media (max-width: 599.98px) {
+  .horizon-table .mat-column-counts {
+    display: none;
+  }
+}
+
 th.mat-header-cell,
 td.mat-cell {
   padding-top: 10px;

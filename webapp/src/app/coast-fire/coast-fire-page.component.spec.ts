@@ -32,7 +32,9 @@ describe('CoastFirePageComponent', () => {
   ];
 
   beforeEach(async () => {
-    bulkRunner = jasmine.createSpyObj<CoastFireBulkRunnerService>('CoastFireBulkRunnerService', ['analyze']);
+    bulkRunner = jasmine.createSpyObj<CoastFireBulkRunnerService>('CoastFireBulkRunnerService', [
+      'analyze',
+    ]);
     bulkRunner.analyze.and.returnValue(mockRows);
 
     await TestBed.configureTestingModule({
@@ -52,7 +54,7 @@ describe('CoastFirePageComponent', () => {
         MatSelectModule,
         MatTableModule,
         NgxEchartsModule.forRoot({
-          echarts: () => import('../echarts-init').then((m) => m.echarts),
+          echarts: () => import('../echarts-init').then(m => m.echarts),
         }),
       ],
       providers: [

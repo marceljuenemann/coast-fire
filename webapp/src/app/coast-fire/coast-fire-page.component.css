@@ -65,3 +65,41 @@
 .results mat-card-content {
   padding-top: 8px;
 }
+
+.page-footer {
+  margin-top: 36px;
+  text-align: center;
+}
+
+.page-footer__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #1a1a1a;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin: -6px -10px;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.page-footer__link:hover {
+  color: #000;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.page-footer__link:focus-visible {
+  outline: 2px solid #1a1a1a;
+  outline-offset: 2px;
+}
+
+.page-footer__icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}

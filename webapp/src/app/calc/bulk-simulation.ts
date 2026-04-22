@@ -1,11 +1,5 @@
 import { FIRST_YEAR, HISTORIC_PRICES } from './historic-us-returns';
-import {
-  Config,
-  HistoricReturns,
-  Simulator,
-  SingleResult,
-  YoYReturnsSource,
-} from './simulation';
+import { Config, HistoricReturns, Simulator, SingleResult, YoYReturnsSource } from './simulation';
 
 /** Upper bound for horizon rows (simulations never run past this many years). */
 export const MAX_HORIZON_CAP = 40;
@@ -91,7 +85,7 @@ export class BulkSimulation {
         results.push(sim.singleSimulation(y, m));
       }
     }
-    const successes = results.filter((r) => r.targetReached).length;
+    const successes = results.filter(r => r.targetReached).length;
     const totalRuns = results.length;
     return {
       horizonYears,

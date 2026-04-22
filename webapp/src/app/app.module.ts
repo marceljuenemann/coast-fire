@@ -40,7 +40,7 @@ import { PathDetailDialogComponent } from './coast-fire/path-detail-dialog.compo
     MatSelectModule,
     MatTableModule,
     NgxEchartsModule.forRoot({
-      echarts: () => import('./echarts-init').then((m) => m.echarts),
+      echarts: () => import('./echarts-init').then(m => m.echarts),
     }),
   ],
   bootstrap: [AppComponent],
